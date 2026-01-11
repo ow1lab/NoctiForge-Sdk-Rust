@@ -1,0 +1,10 @@
+[package]
+name = "echo"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+noctiforge_sdk_rust = { path = "../../sdk" }
+tokio = { version = "1" }
+serde = { version = "1", features = ["derive"] }
+
