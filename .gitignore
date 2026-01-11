@@ -1,0 +1,7 @@
+*.tar.*
+.cargo
+.env
+/dist
+target
+vendor
+.direnv
