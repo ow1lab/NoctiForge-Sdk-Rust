@@ -1,6 +1,9 @@
 [workspace]
 members = [
     "sdk",
+]
+
+exclude = [
     "examples/echo",
     "examples/custom",
 ]

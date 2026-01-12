@@ -8,6 +8,7 @@ struct Request {
 fn find_user_by_id(id: u8) -> Option<&'static str> {
     match id {
         1 => Some("ow1"),
+        2 => Some("tom"),
         _ => None,
     }
 }
