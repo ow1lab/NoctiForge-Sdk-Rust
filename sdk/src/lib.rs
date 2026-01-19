@@ -1,8 +1,6 @@
-use serde::{Serialize, de::DeserializeOwned};
 use futures_util::FutureExt;
-use std::{
-    collections::HashMap, panic::AssertUnwindSafe
-};
+use serde::{Serialize, de::DeserializeOwned};
+use std::{collections::HashMap, panic::AssertUnwindSafe};
 use std::{future::Future, marker::PhantomData};
 use tokio::net::UnixListener;
 use tonic::Response;
@@ -66,9 +64,7 @@ where
         let result = AssertUnwindSafe(fut)
             .catch_unwind()
             .await
-            .map_err(|panic| {
-                Status::internal(format!("{:?}", panic))
-            })?;
+            .map_err(|panic| Status::internal(format!("{:?}", panic)))?;
 
         let invoke_result = match result {
             Ok(out) => {
@@ -122,15 +118,15 @@ where
 #[cfg(test)]
 mod lib_tests {
     use super::*;
+    use hyper_util::rt::TokioIo;
     use serde::{Deserialize, Serialize};
     use std::time::Duration;
     use tokio::time::timeout;
     use tonic::transport::{Channel, Endpoint, Uri};
     use tower::service_fn;
-    use hyper_util::rt::TokioIo;
 
     use action::{
-        function_runner_service_client::FunctionRunnerServiceClient, InvokeRequest,
+        InvokeRequest, function_runner_service_client::FunctionRunnerServiceClient,
         invoke_result::Result as IR,
     };
 
@@ -168,7 +164,7 @@ mod lib_tests {
     #[tokio::test]
     async fn test_successful_invocation() {
         let socket_path = "/tmp/test_success.sock";
-        
+
         // Clean up any existing socket
         let _ = std::fs::remove_file(socket_path);
 
@@ -192,9 +188,7 @@ mod lib_tests {
                 );
                 tonic::transport::Server::builder()
                     .add_service(svc)
-                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(
-                        listener,
-                    ))
+                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(listener))
                     .await
                     .unwrap();
             })
@@ -259,9 +253,7 @@ mod lib_tests {
                 );
                 tonic::transport::Server::builder()
                     .add_service(svc)
-                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(
-                        listener,
-                    ))
+                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(listener))
                     .await
                     .unwrap();
             })
@@ -312,9 +304,7 @@ mod lib_tests {
                 );
                 tonic::transport::Server::builder()
                     .add_service(svc)
-                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(
-                        listener,
-                    ))
+                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(listener))
                     .await
                     .unwrap();
             })
@@ -330,7 +320,7 @@ mod lib_tests {
 
         let response = client.invoke(request).await;
         assert!(response.is_err());
-        
+
         let err = response.unwrap_err();
         assert_eq!(err.code(), tonic::Code::InvalidArgument);
         assert!(err.message().contains("Invalid input"));
@@ -367,9 +357,7 @@ mod lib_tests {
                 );
                 tonic::transport::Server::builder()
                     .add_service(svc)
-                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(
-                        listener,
-                    ))
+                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(listener))
                     .await
                     .unwrap();
             })
@@ -426,9 +414,7 @@ mod lib_tests {
                 );
                 tonic::transport::Server::builder()
                     .add_service(svc)
-                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(
-                        listener,
-                    ))
+                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(listener))
                     .await
                     .unwrap();
             })
@@ -443,7 +429,7 @@ mod lib_tests {
 
         let response = client.invoke(request).await;
         assert!(response.is_err());
-        
+
         let err = response.unwrap_err();
         assert_eq!(err.code(), tonic::Code::Internal);
 
@@ -474,9 +460,7 @@ mod lib_tests {
                 );
                 tonic::transport::Server::builder()
                     .add_service(svc)
-                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(
-                        listener,
-                    ))
+                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(listener))
                     .await
                     .unwrap();
             })
@@ -531,9 +515,7 @@ mod lib_tests {
                 );
                 tonic::transport::Server::builder()
                     .add_service(svc)
-                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(
-                        listener,
-                    ))
+                    .serve_with_incoming(tokio_stream::wrappers::UnixListenerStream::new(listener))
                     .await
                     .unwrap();
             })
@@ -564,4 +546,3 @@ mod lib_tests {
         let _ = std::fs::remove_file(socket_path);
     }
 }
-

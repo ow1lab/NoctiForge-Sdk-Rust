@@ -9,9 +9,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let api_dir = Path::new(&out_dir).join("api");
 
     tonic_prost_build::configure().compile_protos(
-        &[
-            get_proto_file("function", "action.proto", &api_dir)?,
-        ],
+        &[get_proto_file("function", "action.proto", &api_dir)?],
         &[api_dir],
     )?;
 
